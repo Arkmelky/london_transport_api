@@ -17,7 +17,7 @@ namespace LondonTransportAPI
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                 "~/Scripts/bootstrap.min.js"));
             
-            bundles.Add(new StyleBundle("~/bundles/bootstrap").Include(
+            bundles.Add(new StyleBundle("~/bundles/bootstrap-css").Include(
                 "~/Content/bootstrap.min.css",
                 "~/Content/bootstrap-theme.min.css"));
         }
