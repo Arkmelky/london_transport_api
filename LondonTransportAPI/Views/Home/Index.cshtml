@@ -1,9 +1,97 @@
-﻿@{
+﻿@using LondonTransportAPI.Models.BikePoint
+@using Microsoft.Ajax.Utilities
+@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<BikePoint> bikePoints = null;
+    if (ViewBag.result != null)
+    {
+        bikePoints = (List<BikePoint>)ViewBag.result;
+    }
+    
 }
 
 <h2>Index</h2>
-<div>
-    Some content of the main page !!!
+
+<div >
+    <div class="col-xs-12">
+        <div>
+            @ViewBag.Message
+        </div>
+        <div>
+            <p>Some content of the main page !!!
+                Response wrom web api:</p>
+            <br/>
+        </div>
+    </div>
+    
+    
+    
+    @if (bikePoints != null)
+    {
+        foreach (var item in bikePoints)
+        {
+            <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="item thumbnail">
+                    <div style="display: none" name="id" id="@item.id">
+                    </div>
+                
+                    <div>
+                        <label>Place: </label>
+                        @item.commonName
+                    </div>
+            
+                
+                    <ul>
+                        @foreach (AdditionalProperty ap in @item.additionalProperties)
+                        {
+
+                            switch (@ap.key)
+                            {
+                                case "NbBikes":
+                                    <li>
+                                        <label>Number of bikes:</label>
+                                        @ap.value
+                                    </li>
+                                    break;
+                                case "NbEmptyDocks":
+                                    <li>
+                                        <label>Number of empty docks:</label>
+                                        @ap.value
+                                    </li>
+                                    break;
+                                case "NbDocks":
+                                    <li>
+                                        <label>Total number of docks:</label>
+                                        @ap.value
+                                    </li>
+                                    break;
+  
+                            }
+                            /*
+                            <li>@ap.category</li>
+                            <li>@ap.key</li>
+                            <li>@ap.sourceSystemKey</li>
+                            <li>@ap.value</li>
+                            <li>@ap.modified</li>
+                            <li>---------------</li>*/
+                        }
+                    </ul>
+                
+                    <div style="display: none;" name="lat" value="@item.lat">
+                    </div>
+                    <div style="display: none;" name="lon" value="@item.lon">
+                    </div>
+                    <div>
+                        --------------------------<br/><br/>
+                    </div>
+
+
+                </div>
+                
+            </div>
+        }
+    }
+    
 </div>
