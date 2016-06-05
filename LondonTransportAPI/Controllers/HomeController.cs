@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web;
+using System.Web.Caching;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using LondonTransportAPI.Models.BikePoint;
@@ -16,13 +17,14 @@ namespace LondonTransportAPI.Controllers
 {
     public class HomeController : Controller
     {
-        private BikeRequestBuilder bikeRequestBuilder;
-        private IRequestExecutor requestExecutor;
+        private string cacheKey = "bikePoints";
+        private readonly BikeRequestBuilder _bikeRequestBuilder;
+        private readonly IRequestExecutor _requestExecutor;
 
         public HomeController(IRequestExecutor executor)
         {
-            requestExecutor = executor;
-            bikeRequestBuilder = new BikeRequestBuilder();
+            _requestExecutor = executor;
+            _bikeRequestBuilder = new BikeRequestBuilder();
         }
 
         //
@@ -30,26 +32,46 @@ namespace LondonTransportAPI.Controllers
 
         public ActionResult Index()
         {
+            List<BikePoint> bikePoints;
+            object cacheItem = HttpContext.Cache.Get(cacheKey);
+             
+
+            if (cacheItem == null)
+            {
+                bikePoints = SetOrUpdateBikePointsInCache();
+            }
+            else
+            {
+                bikePoints = cacheItem as List<BikePoint>;
+            }
+
+            var res = bikePoints.Take(6).ToList();
+            ViewBag.result = res;
+            
+            return View();
+        }
+
+
+        
+        private List<BikePoint> SetOrUpdateBikePointsInCache()
+        {
+            List<BikePoint> bikePoints;
+
             try
             {
-                string req = requestExecutor.Execute(bikeRequestBuilder.GetAllBikePoints());
-            
+                string req = _requestExecutor.Execute(_bikeRequestBuilder.GetAllBikePoints());
+
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
 
-            
-                var obj = serializer.Deserialize<BikePoint[]>(req);
-                var res = obj.Take(6).ToList();
-                //var s = res.TakeWhile(x => x.id != "").ToList();
-                ViewBag.result = res;
+                bikePoints = serializer.Deserialize<BikePoint[]>(req).ToList();
+                HttpContext.Cache.Insert(cacheKey, bikePoints);
             }
             catch (Exception)
             {
                 throw;
             }
 
-            
-
-            return View();
+            return bikePoints;
         }
 
     }
