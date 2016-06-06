@@ -21,12 +21,14 @@ function setMarkerOnMap(lat, lon, title) {
         zoom: 13,
         center: myLatlng
     };
-    var map = new google.maps.Map(mapDiv, myMapOptions);
+    map = new google.maps.Map(mapDiv, myMapOptions);
 
     var marker = new google.maps.Marker({
+        map:map,
         position: myLatlng,
         title: title,
-        label: title
+        label: title,
+        animation:google.maps.Animation.DROP
     });
     marker.setMap(map);
 

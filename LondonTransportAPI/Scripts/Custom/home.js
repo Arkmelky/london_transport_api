@@ -4,7 +4,7 @@ var containerClose = "</div>";
 //END
 
 //bike-point-item
-var itemOpen = '<div class="col-xs-12 col-sm-6 col-md-4 bike-point-item"><div class="item thumbnail ">';
+var itemOpen = '<div style="display:none;" class="col-xs-12 col-sm-6 col-md-4 bike-point-item"><div class="item thumbnail ">';
 var itemClose = '</div></div>';
 //END
 
@@ -46,19 +46,22 @@ function parseListOfBikePoints(data) {
     var list = JSON.parse(data);
     var renderBikePoints="";
     renderBikePoints += containerOpen;
-    console.log(list.length);
+    
     for (var i = 0; i < list.length; i++) {
         renderBikePoints += getBikePointHtml(list[i]);
     }
 
     renderBikePoints += containerClose;
-
-    $("div.bike-points-container").replaceWith(renderBikePoints);
+    $("div.bike-point-item").fadeOut(200, function () {
+        $("div.bike-points-container").replaceWith(renderBikePoints);
+        $("div.bike-point-item").fadeIn(200);
+    });
+    
 
 }
 
 function getBikePointHtml(bikePoint) {
-    console.log("getBikePointHtml");
+    
     var result = "";
 
     result += itemOpen;
