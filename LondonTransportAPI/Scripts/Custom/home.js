@@ -36,19 +36,19 @@ $(document).ready(function () {
             method: "GET",
             url: url
         }).done(function (data) {
-            parseListOfBikePoints(data);
+            parseListOfBikePointsToHtml(data);
         });
     });
 
 });
 
-function parseListOfBikePoints(data) {
+function parseListOfBikePointsToHtml(data) {
     var list = JSON.parse(data);
     var renderBikePoints="";
     renderBikePoints += containerOpen;
     
     for (var i = 0; i < list.length; i++) {
-        renderBikePoints += getBikePointHtml(list[i]);
+        renderBikePoints += bikePointToHtml(list[i]);
     }
 
     renderBikePoints += containerClose;
@@ -60,7 +60,7 @@ function parseListOfBikePoints(data) {
 
 }
 
-function getBikePointHtml(bikePoint) {
+function bikePointToHtml(bikePoint) {
     
     var result = "";
 
