@@ -19,8 +19,9 @@ namespace LondonTransportAPI.Controllers
 {
     public class HomeController : Controller
     {
-        private int itemsPerPage = 6;
-        private string cacheKey = "bikePoints";
+        private int _itemsPerPage;
+        private int _countPages;
+        private const string CacheKey = "bikePoints";
         private readonly BikeRequestBuilder _bikeRequestBuilder;
         private readonly IRequestExecutor _requestExecutor;
 
@@ -28,6 +29,7 @@ namespace LondonTransportAPI.Controllers
         {
             _requestExecutor = executor;
             _bikeRequestBuilder = new BikeRequestBuilder();
+            _itemsPerPage = 6;
         }
 
         //
@@ -36,9 +38,9 @@ namespace LondonTransportAPI.Controllers
         public ActionResult Index()
         {
             var bikePointsList = GetBikePointsFromCache();
-            var res = bikePointsList.Take(itemsPerPage).ToList();
+            var res = bikePointsList.Take(_itemsPerPage).ToList();
             ViewBag.result = res;
-            ViewBag.totalPages = bikePointsList.Count/itemsPerPage;
+            ViewBag.totalPages = _countPages;
             
             return View();
         }
@@ -47,7 +49,7 @@ namespace LondonTransportAPI.Controllers
         public string GetBikePoints(int pageNum = 1)
         {
             var bikePointsList = GetBikePointsFromCache();
-            var res = bikePointsList.Skip(itemsPerPage*(pageNum-1)).Take(itemsPerPage).ToList();
+            var res = bikePointsList.Skip(_itemsPerPage*(pageNum-1)).Take(_itemsPerPage).ToList();
 
             return new JavaScriptSerializer().Serialize(res);
         }
@@ -57,7 +59,7 @@ namespace LondonTransportAPI.Controllers
         private List<BikePoint> GetBikePointsFromCache()
         {
             List<BikePoint> bikePoints;
-            object cacheItem = HttpContext.Cache.Get(cacheKey);
+            object cacheItem = HttpContext.Cache.Get(CacheKey);
             if (cacheItem == null)
             {
                 try
@@ -67,7 +69,14 @@ namespace LondonTransportAPI.Controllers
                     JavaScriptSerializer serializer = new JavaScriptSerializer();
 
                     bikePoints = serializer.Deserialize<BikePoint[]>(req).ToList();
-                    HttpContext.Cache.Insert(cacheKey, bikePoints);
+                    HttpContext.Cache.Insert(CacheKey, bikePoints);
+
+                    //calc pages count
+                    _countPages = bikePoints.Count / _itemsPerPage;
+                    if (bikePoints.Count % _itemsPerPage > 0)
+                    {
+                        _countPages++;
+                    }
                 }
                 catch (Exception)
                 {
@@ -78,7 +87,6 @@ namespace LondonTransportAPI.Controllers
             {
                 bikePoints = cacheItem as List<BikePoint>;
             }
-
 
             return bikePoints;
         }
