@@ -1,10 +1,13 @@
-﻿@using LondonTransportAPI.Models.BikePoint
+﻿@using System.Web.Optimization
+@using LondonTransportAPI.Models.BikePoint
 @using Microsoft.Ajax.Utilities
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     List<BikePoint> bikePoints = null;
+    int totalPages = ViewBag.totalPages;
+    
     if (ViewBag.result != null)
     {
         bikePoints = (List<BikePoint>)ViewBag.result;
@@ -14,84 +17,92 @@
 
 <h2>Index</h2>
 
-<div >
+<div>
     <div class="col-xs-12">
         <div>
             @ViewBag.Message
         </div>
         <div>
             <p>Some content of the main page !!!
-                Response wrom web api:</p>
+                Response from web api:</p>
             <br/>
         </div>
     </div>
     
-    
-    
-    @if (bikePoints != null)
-    {
-        foreach (var item in bikePoints)
+    <div class="bike-points-container">
+        @if (bikePoints != null)
         {
-            <div class="col-xs-12 col-sm-6 col-md-4">
-                <div class="item thumbnail">
-                    <div style="display: none" name="id" id="@item.id">
-                    </div>
-                
-                    <div>
-                        <label>Place: </label>
-                        @item.commonName
-                    </div>
+            foreach (var item in bikePoints)
+            {
+                <div class="col-xs-12 col-sm-6 col-md-4 bike-point-item">
+                    <div class="item thumbnail ">
+                    
+                        <div>
+                            <label>Place: </label>
+                            @item.commonName
+                        </div>
             
                 
-                    <ul>
+                        
                         @foreach (AdditionalProperty ap in @item.additionalProperties)
                         {
 
                             switch (@ap.key)
                             {
                                 case "NbBikes":
-                                    <li>
+                                    <div>
                                         <label>Number of bikes:</label>
                                         @ap.value
-                                    </li>
+                                    </div>
                                     break;
                                 case "NbEmptyDocks":
-                                    <li>
+                                    <div>
                                         <label>Number of empty docks:</label>
                                         @ap.value
-                                    </li>
+                                    </div>
                                     break;
                                 case "NbDocks":
-                                    <li>
+                                    <div>
                                         <label>Total number of docks:</label>
                                         @ap.value
-                                    </li>
+                                    </div>
                                     break;
   
                             }
                             /*
-                            <li>@ap.category</li>
-                            <li>@ap.key</li>
-                            <li>@ap.sourceSystemKey</li>
-                            <li>@ap.value</li>
-                            <li>@ap.modified</li>
-                            <li>---------------</li>*/
+                                    <li>@ap.category</li>
+                                    <li>@ap.key</li>
+                                    <li>@ap.sourceSystemKey</li>
+                                    <li>@ap.value</li>
+                                    <li>@ap.modified</li>
+                                    <li>---------------</li>*/
                         }
-                    </ul>
+                        
+                        
+                        <button name="@item.commonName" lat="@item.lat" lon="@item.lon" onclick="showBikePoint(this)" class="btn  btn-default" value="Show on map">Show on map</button>
+                    
+                    </div>
                 
-                    <div style="display: none;" name="lat" value="@item.lat">
-                    </div>
-                    <div style="display: none;" name="lon" value="@item.lon">
-                    </div>
-                    <div>
-                        --------------------------<br/><br/>
-                    </div>
-
-
                 </div>
-                
-            </div>
+            }
         }
-    }
+    </div>
     
+    
+    
+    <div>
+        <ul class="pagination">
+            @{
+                var active = "class=active";
+            }
+            @for (int i=1;i<totalPages+1;i++)
+            {
+                <li @if (i == 1){ @active;}>
+                    <a href="javascript:void(0)" link="@Url.Action("GetBikePoints","Home",new{pageNum = i})">@i</a>
+                </li>
+            }
+        </ul>
+    </div>
 </div>
+
+@Scripts.Render("~/bundles/home")
