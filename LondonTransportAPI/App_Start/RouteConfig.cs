@@ -27,10 +27,16 @@ namespace LondonTransportAPI
                 );
 
             routes.MapRoute(
-                "SearchBikePoints",
-                "Home/SearchBikePoints/{query}",
-                new { query = UrlParameter.Optional }
+                "SearchBikePointsByRadius",
+                "Home/SearchBikePointsByRadius/{lat}/{lon}/{rad}",
+                new { 
+                    lat = UrlParameter.Optional, 
+                    lon = UrlParameter.Optional, 
+                    rad = UrlParameter.Optional 
+                }
                 );
+
+
         }
     }
 }

@@ -20,14 +20,14 @@
 <div>
     
     <div class="col-xs-12">
-        <h2>Index</h2>
-        Find BikePoints by location and distance
+        <h2>Find your bike point !</h2>
+        Find BikePoints by location and distance (default distance - 500 meters)
     </div>
     <div class="col-xs-12">
         
-        <form method="GET" action="@Url.Action("SearchBikePoints","Home", new{ query = ""})" class="form-inline">
+        <form id="search" method="GET" action="@Url.Action("SearchBikePointsByRadius","Home", new{ query = ""})" class="form-inline">
             <fieldset class="form-group">
-                <input name="query" id="query" placeholder="Street, Building" class="form-control"/>
+                <input name="address" id="address" placeholder="Street, Building" class="form-control"/>
                 <select name="meters" class="selectpicker">
                     <option disabled selected>distance</option>
                     <option value="200">200 meters</option>
@@ -36,10 +36,33 @@
                     <option value="1500">1500 meters</option>
                     <option value="2000">2000 meters</option>
                 </select>
-                <input type="submit" class="btn btn-default" value="Find"/>
+                <input type="submit" class="btn btn-success" name="button" value="Find"/>
             </fieldset>
             
         </form>
+        
+        <div class="addresses-results-container ">
+            <!--
+            <div class="address-results-info-message bg-info">
+                Some message blah-blah
+            </div>
+            <div class="address-results-items thumbnail">
+                <div class="address-item list-group-item">
+                    Some item 1
+                </div>
+                <div class="address-item list-group-item">
+                    Some item 2
+                </div>
+                <div class="address-item list-group-item">
+                    Some item 3
+                </div>
+            </div>
+            <div>
+                <button class="btn btn-danger">Close</button>
+            </div>
+            -->
+        </div>
+        
     </div>
     <div class="col-xs-12">
         <h3>List of BikePoints</h3>
@@ -114,7 +137,7 @@
             @for (int i=1;i<totalPages+1;i++)
             {
                 <li @if (i == 1){ @active;}>
-                    <a style="min-width: 50px" href="javascript:void(0)" link="@Url.Action("GetBikePoints","Home",new{pageNum = i})">@i</a>
+                    <a style="width: 50px" href="javascript:void(0)" link="@Url.Action("GetBikePoints","Home",new{pageNum = i})">@i</a>
                 </li>
             }
         </ul>

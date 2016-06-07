@@ -5,6 +5,8 @@
 <meta charset="utf-8" />
 <title>@ViewBag.Title</title>
     @Styles.Render("~/bundles/bootstrap-css")
+    @Styles.Render("~/bundles/site-css")
+
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/map")
@@ -30,8 +32,8 @@
         </div>
         <div class="col-xs-12">
             <div class="center-block" style="margin-top: 15px;">
-                <button class="btn btn-default" onclick="showAllMarkers()">Show all markers</button>
-                <button class="btn btn-default" onclick="deleteAllMarkers()">Remove all markers</button>
+                <button class="btn btn-primary" onclick="showAllMarkers()">Show all markers</button>
+                <button class="btn btn-primary" onclick="deleteAllMarkers()">Remove all markers</button>
             </div>
         </div>
     </section>

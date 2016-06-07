@@ -45,6 +45,7 @@ namespace LondonTransportAPI.Controllers
             return View();
         }
 
+        // get bikepoints from cache by page number and return them as JSON string
         [WebMethod]
         public string GetBikePoints(int pageNum = 1)
         {
@@ -54,13 +55,16 @@ namespace LondonTransportAPI.Controllers
             return new JavaScriptSerializer().Serialize(res);
         }
 
+        // get bikepoints from London Transport API by point and radius
         [WebMethod]
-        public string SearchBikePoints(string query)
+        public string SearchBikePointsByRadius(double lat,double lon,int rad)
         {
-            var resp = _requestExecutor.Execute(_bikeRequestBuilder.GetBikePointsByName(query));
+            var resp = _requestExecutor.Execute(_bikeRequestBuilder.GetBikePointsByRadius(lat, lon, rad));
             return resp;
         }
 
+
+        // method for caching total list of bikepoints, one time per live period of cache.
         private List<BikePoint> GetBikePointsFromCache()
         {
             List<BikePoint> bikePoints;

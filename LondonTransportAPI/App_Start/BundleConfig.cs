@@ -25,7 +25,8 @@ namespace LondonTransportAPI
                 ));
 
             bundles.Add(new ScriptBundle("~/bundles/map").Include(
-                "~/Scripts/Custom/map.js"
+                "~/Scripts/Custom/map.js",
+                "~/Scripts/Custom/geo.js"
                 ));
             
             //Styles
@@ -34,7 +35,9 @@ namespace LondonTransportAPI
                 "~/Content/bootstrap-theme.min.css",
                 "~/Content/bootstrap-select.min.css"
                 ));
-
+            bundles.Add(new StyleBundle("~/bundles/site-css").Include(
+                "~/Content/Custom/site.css"
+                ));
             
         }
     }

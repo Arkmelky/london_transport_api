@@ -1,0 +1,10 @@
+﻿.address-item {
+    cursor: pointer;
+}
+.address-item:hover {
+    background: whitesmoke;
+}
+
+.address-item.selected {
+    background: #5cb85c !important;
+}

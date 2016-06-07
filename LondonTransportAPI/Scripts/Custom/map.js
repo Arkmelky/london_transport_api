@@ -20,7 +20,7 @@ function initMap() {
 }
 
 //set marker on map
-function setMarkerOnMap(lat, lon, title) {
+function setMarkerOnMap(lat, lon, title, label) {
     var myLatlng = new google.maps.LatLng(lat, lon);
     var myMapOptions = {
         zoom: 13,
@@ -32,12 +32,26 @@ function setMarkerOnMap(lat, lon, title) {
         map:map,
         position: myLatlng,
         title: title,
-        label: title,
+        label: label,
         animation:google.maps.Animation.DROP
     });
     marker.setMap(map);
 
     addMarkerToList(marker);
+}
+
+//get new marker
+function getNewMarker(lat, lon, title, label) {
+    var myLatlng = new google.maps.LatLng(lat, lon);
+    var marker = new google.maps.Marker({
+        map: map,
+        position: myLatlng,
+        title: title,
+        label: label,
+        animation: google.maps.Animation.DROP
+    });
+
+    return marker;
 }
 
 //add marker to array
@@ -63,15 +77,20 @@ function showAllMarkers() {
     setMapOnAllMarkers(newMap);
 }
 
+//overload showAllMarkers function with custom map center
+function showAllMarkersWithCenter(lat, lon) {
+    var myLatLng = new google.maps.LatLng(lat, lon);
+    var myOptions = {
+        zoom: 15,
+        center: myLatLng
+    };
+    var newMap = new google.maps.Map(mapDiv, myOptions);
+    setMapOnAllMarkers(newMap);
+}
+
 // deletes all markers in the array by removing references to them.
 function deleteAllMarkers() {
     clearMarkers();
     markers = [];
 }
 
-//
-//   GoogleMap Geocode
-//
-//
-
-var getAddressByGoogle = "https://maps.googleapis.com/maps/api/geocode/json?address=";

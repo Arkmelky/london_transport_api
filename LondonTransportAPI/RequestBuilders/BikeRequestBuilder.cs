@@ -29,7 +29,7 @@ namespace LondonTransportAPI.RequestBuilders
         //Gets the bike points that lie within the locus defined by the lat/lon of its centre and a radius in metres.
         public string GetBikePointsByRadius(double lat, double lon, int rad)
         {
-            return String.Format("{0}api.tfl.gov.uk/BikePoint?lat={1}&lon={2}&radius={3}&app_id=&app_key=", Https, lat, lon, rad);
+            return String.Format("{0}api.tfl.gov.uk/BikePoint?lat={1}&lon={2}&radius={3}&app_id=&app_key=", Https, lat, lon, rad).Replace(",", ".");
         }
 
         //Search for bike stations by their name, a bike points name contains location information

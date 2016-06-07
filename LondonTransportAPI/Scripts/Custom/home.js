@@ -9,7 +9,7 @@ function showBikePoint(obj) {
     var lat = obj.getAttribute("lat");
     var lon = obj.getAttribute("lon");
     var name = obj.getAttribute("name");
-    setMarkerOnMap(lat, lon, name);
+    setMarkerOnMap(lat, lon, name, "B");
 }
 
 //pagination handler
@@ -28,13 +28,39 @@ $(document).ready(function () {
             method: "GET",
             url: url
         }).done(function (data) {
+            data = strToJsonStr(data);
             parseListOfBikePointsToHtml(data);
         });
     });
 
 });
 
+//get bike points by point and radius
+function getBikePointsByRadius(lat, lon, rad, action) {
+    var url = action + "?lat=" + lat + "&lon=" + lon + "&rad=" + rad;
+    
+    $.ajax({
+        method: "GET",
+        url: url
+    }).done(function (data) {
+        data = strToJsonStr(data);
+        var list = data.places;
+        parseListOfBikePointsToHtml(list);
 
+        for (var i = 0; list.length > i; i++) {
+            var marker = getNewMarker(list[i].lat, list[i].lon, list[i].commonName, "B");
+            addMarkerToList(marker);
+        }
+
+        showAllMarkersWithCenter(lat, lon);
+        // console.log(data);
+    });
+}
+
+//parse string to JSON 
+function strToJsonStr(str) {
+    return JSON.parse(str);
+}
 //------------- Markup handlers (from JSON to HTML) ----------------------
 
 
@@ -60,8 +86,8 @@ var labelClose = '</label>';
 
 
 //BikePoints JSON array to HTML
-function parseListOfBikePointsToHtml(data) {
-    var list = JSON.parse(data);
+function parseListOfBikePointsToHtml(list) {
+    //var list = JSON.parse(data);
     var renderBikePoints="";
     renderBikePoints += containerOpen;
     
@@ -70,12 +96,17 @@ function parseListOfBikePointsToHtml(data) {
     }
 
     renderBikePoints += containerClose;
-    $("div.bike-point-item").fadeOut(200, function () {
+
+    var bikePointItems = $("div.bike-point-item");
+    if (bikePointItems.length > 0) {
+        $("div.bike-point-item").fadeOut(200, function () {
+            $("div.bike-points-container").replaceWith(renderBikePoints);
+            $("div.bike-point-item").fadeIn(200);
+        });
+    } else {
         $("div.bike-points-container").replaceWith(renderBikePoints);
         $("div.bike-point-item").fadeIn(200);
-    });
-    
-
+    }
 }
 
 //BikePoint object to HTML
