@@ -15,21 +15,37 @@
     
 }
 
-<h2>Index</h2>
+
 
 <div>
-    <div class="col-xs-12">
-        <div>
-            @ViewBag.Message
-        </div>
-        <div>
-            <p>Some content of the main page !!!
-                Response from web api:</p>
-            <br/>
-        </div>
-    </div>
     
+    <div class="col-xs-12">
+        <h2>Index</h2>
+        Find BikePoints by location and distance
+    </div>
+    <div class="col-xs-12">
+        
+        <form method="GET" action="@Url.Action("SearchBikePoints","Home", new{ query = ""})" class="form-inline">
+            <fieldset class="form-group">
+                <input name="query" id="query" placeholder="Street, Building" class="form-control"/>
+                <select name="meters" class="selectpicker">
+                    <option disabled selected>distance</option>
+                    <option value="200">200 meters</option>
+                    <option value="500">500 meters</option>
+                    <option value="1000">1000 meters</option>
+                    <option value="1500">1500 meters</option>
+                    <option value="2000">2000 meters</option>
+                </select>
+                <input type="submit" class="btn btn-default" value="Find"/>
+            </fieldset>
+            
+        </form>
+    </div>
+    <div class="col-xs-12">
+        <h3>List of BikePoints</h3>
+    </div>
     <div class="bike-points-container">
+        
         @if (bikePoints != null)
         {
             foreach (var item in bikePoints)
@@ -90,7 +106,7 @@
     
     
     
-    <div>
+    <div class="col-xs-12">
         <ul class="pagination">
             @{
                 var active = "class=active";
@@ -98,7 +114,7 @@
             @for (int i=1;i<totalPages+1;i++)
             {
                 <li @if (i == 1){ @active;}>
-                    <a href="javascript:void(0)" link="@Url.Action("GetBikePoints","Home",new{pageNum = i})">@i</a>
+                    <a style="min-width: 50px" href="javascript:void(0)" link="@Url.Action("GetBikePoints","Home",new{pageNum = i})">@i</a>
                 </li>
             }
         </ul>

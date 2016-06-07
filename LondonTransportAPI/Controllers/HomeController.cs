@@ -20,7 +20,7 @@ namespace LondonTransportAPI.Controllers
     public class HomeController : Controller
     {
         private int _itemsPerPage;
-        private int _countPages;
+        private static int _countPages;
         private const string CacheKey = "bikePoints";
         private readonly BikeRequestBuilder _bikeRequestBuilder;
         private readonly IRequestExecutor _requestExecutor;
@@ -54,7 +54,12 @@ namespace LondonTransportAPI.Controllers
             return new JavaScriptSerializer().Serialize(res);
         }
 
-
+        [WebMethod]
+        public string SearchBikePoints(string query)
+        {
+            var resp = _requestExecutor.Execute(_bikeRequestBuilder.GetBikePointsByName(query));
+            return resp;
+        }
 
         private List<BikePoint> GetBikePointsFromCache()
         {
@@ -64,11 +69,11 @@ namespace LondonTransportAPI.Controllers
             {
                 try
                 {
-                    string req = _requestExecutor.Execute(_bikeRequestBuilder.GetAllBikePoints());
+                    string resp = _requestExecutor.Execute(_bikeRequestBuilder.GetAllBikePoints());
 
                     JavaScriptSerializer serializer = new JavaScriptSerializer();
 
-                    bikePoints = serializer.Deserialize<BikePoint[]>(req).ToList();
+                    bikePoints = serializer.Deserialize<BikePoint[]>(resp).ToList();
                     HttpContext.Cache.Insert(CacheKey, bikePoints);
 
                     //calc pages count

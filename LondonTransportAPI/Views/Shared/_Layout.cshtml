@@ -17,9 +17,13 @@
     </script>
 </head>
 <body class="container">
-    <ul id="menu">
-        <li>@Html.ActionLink("Home", "Index", "Home")
-    </ul> 
+    <header class="panel-heading">
+        <nav class="navbar navbar-default">
+            <ul id="menu" class="nav navbar-nav">
+                <li class="active">@Html.ActionLink("Home", "Index", "Home")
+            </ul> 
+        </nav>
+    </header>
     <section>
         <div class="col-xs-12" id="map" style="width: 100%;height: 400px;">
             <!--MAP-->
@@ -32,8 +36,11 @@
         </div>
     </section>
     <section>
-    @RenderBody()
+        @RenderBody()
     
     </section>
+    <footer class="panel-footer">
+        
+    </footer>
 </body>
 </html>

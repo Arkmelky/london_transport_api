@@ -16,7 +16,9 @@ namespace LondonTransportAPI
                 "~/Scripts/jquery-{version}.js"));
             
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                "~/Scripts/bootstrap.min.js"));
+                "~/Scripts/bootstrap.min.js",
+                "~/Scripts/bootstrap-select.min.js"
+                ));
 
             bundles.Add(new ScriptBundle("~/bundles/home").Include(
                 "~/Scripts/Custom/home.js"
@@ -29,7 +31,9 @@ namespace LondonTransportAPI
             //Styles
             bundles.Add(new StyleBundle("~/bundles/bootstrap-css").Include(
                 "~/Content/bootstrap.min.css",
-                "~/Content/bootstrap-theme.min.css"));
+                "~/Content/bootstrap-theme.min.css",
+                "~/Content/bootstrap-select.min.css"
+                ));
 
             
         }

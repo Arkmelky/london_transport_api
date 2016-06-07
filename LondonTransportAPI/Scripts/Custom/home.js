@@ -1,4 +1,44 @@
-﻿//bike-points-container
+﻿//
+// JS funstions for Home controller
+//
+
+
+// get "lat,lon,name" params from button "Show on map" 
+// and call the function, for set a marker on map.
+function showBikePoint(obj) {
+    var lat = obj.getAttribute("lat");
+    var lon = obj.getAttribute("lon");
+    var name = obj.getAttribute("name");
+    setMarkerOnMap(lat, lon, name);
+}
+
+//pagination handler
+$(document).ready(function () {
+    var paginationItems = $("ul.pagination > li");
+    paginationItems.click(function () {
+
+        $("ul.pagination > li.active").removeClass("active");
+        $(this).addClass("active");
+
+        var base = window.location.origin;
+        var actionUrl = $(this).find("a").attr("link");
+        var url = base + actionUrl;
+
+        $.ajax({
+            method: "GET",
+            url: url
+        }).done(function (data) {
+            parseListOfBikePointsToHtml(data);
+        });
+    });
+
+});
+
+
+//------------- Markup handlers (from JSON to HTML) ----------------------
+
+
+//bike-points-container
 var containerOpen = '<div class="bike-points-container">';
 var containerClose = "</div>";
 //END
@@ -19,29 +59,7 @@ var labelClose = '</label>';
 //END
 
 
-//pagination handler
-
-$(document).ready(function () {
-    var paginationItems = $("ul.pagination > li");
-    paginationItems.click(function () {
-
-        $("ul.pagination > li.active").removeClass("active");
-        $(this).addClass("active");
-
-        var base = window.location.origin;
-        var ctrlrAction = $(this).find("a").attr("link");
-        var url = base + ctrlrAction;
-        
-        $.ajax({
-            method: "GET",
-            url: url
-        }).done(function (data) {
-            parseListOfBikePointsToHtml(data);
-        });
-    });
-
-});
-
+//BikePoints JSON array to HTML
 function parseListOfBikePointsToHtml(data) {
     var list = JSON.parse(data);
     var renderBikePoints="";
@@ -60,6 +78,7 @@ function parseListOfBikePointsToHtml(data) {
 
 }
 
+//BikePoint object to HTML
 function bikePointToHtml(bikePoint) {
     
     var result = "";
@@ -69,7 +88,6 @@ function bikePointToHtml(bikePoint) {
     result += labelOpen + "Place:" + labelClose;
     result += bikePoint.commonName;
     result += propertyClose;
-    //result += bikePoint.additionalProperties.forEach(additionalPropToHtml());
 
     for (var i = 0; i < bikePoint.additionalProperties.length; i++) {
         result += additionalPropToHtml(bikePoint.additionalProperties[i]);
@@ -116,13 +134,3 @@ function additionalPropToHtml(prop) {
 function buttonShowOnMapHtml(lat,lon,name) {
     return '<button name="'+ name +'" lat="'+ lat +'" lon="'+ lon +'" onclick="showBikePoint(this)" class="btn  btn-default" value="Show on map">Show on map</button>';
 }
-
-//get lat,lon,name params from button "Show on map" and call the function for set a marker
-function showBikePoint(obj) {
-    var lat = obj.getAttribute("lat");
-    var lon = obj.getAttribute("lon");
-    var name = obj.getAttribute("name");
-    setMarkerOnMap(lat, lon, name);
-}
-
-
